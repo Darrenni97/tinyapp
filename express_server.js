@@ -11,8 +11,14 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// database url json format
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+// hello route
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.listen(PORT, () => {
