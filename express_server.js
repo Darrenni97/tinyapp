@@ -9,10 +9,6 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
 // route handler to pass url data
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
@@ -24,9 +20,9 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-// hello route
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+// new url route
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
 });
 
 //checks shortURL data
@@ -35,10 +31,6 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-// new url route
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
