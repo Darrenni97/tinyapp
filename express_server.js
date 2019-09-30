@@ -46,10 +46,15 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+// handles shortURL links to redirect to longURL;
+app.get("/u/:shortURL", (req, res) => {
+  // const longURL = ...
+  res.redirect(longURL);
+});
+
 app.post("/urls", (req, res) => {
   const newID = generateRandomString();
   urlDatabase[newID] = req.body.longURL; // adds new links to database
-  console.log(req.body);  // Log the POST request body to the console
   res.redirect(`/urls/${newID}`);  //responds with a redirect to /urls/:shortURL route
 });
 
