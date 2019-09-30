@@ -47,9 +47,10 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  urlDatabase[generateRandomString()] = req.body.longURL; // adds new links to database
+  const newID = generateRandomString();
+  urlDatabase[newID] = req.body.longURL; // adds new links to database
   console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${newID}`);  //responds with a redirect to /urls/:shortURL route
 });
 
 
