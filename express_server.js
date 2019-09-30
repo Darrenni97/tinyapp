@@ -13,6 +13,12 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// route handler to pass url data
+app.get("/urls", (req, res) => {
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
+});
+
 // database url json format
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
