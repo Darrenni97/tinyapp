@@ -18,13 +18,12 @@
         </form>
       </div>
     <% } else { %> 
-    <div style="width: auto"> 
-      <%= username %>
+      <div style="width: auto"> 
+          <%= username %>
+      </div>
       <form method='POST' action='/logout'>
-        <input type="text" name="username" placeholder='Username'>
-        <button type='submit'>Submit</button>
-    </form>
-    </div>
+        <button type='submit'>Logout</button>
+      </form>
     <% } %>
   </nav>
 </header>
