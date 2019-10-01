@@ -14,15 +14,15 @@
       <div>
         <form method='POST' action='/login'>
             <input type="text" name="username" placeholder='Username'>
-            <button type='submit'>Submit</button>
+            <button type='submit' class='btn btn-primary'>Login</button>
         </form>
       </div>
     <% } else { %> 
-      <div style="width: auto"> 
+      <div style='width: auto; padding: 10px'> 
           <%= username %>
       </div>
       <form method='POST' action='/logout'>
-        <button type='submit'>Logout</button>
+        <button type='submit'class='btn btn-secondary'>Logout</button>
       </form>
     <% } %>
   </nav>
