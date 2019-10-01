@@ -24,6 +24,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.get('/', (req, res) => {
+  res.send('Hello!');
+})
+
 // route handler to pass url data
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
@@ -57,6 +61,12 @@ app.post("/urls", (req, res) => {
   urlDatabase[newID] = req.body.longURL; // adds new links to database
   res.redirect(`/urls/${newID}`);  //responds with a redirect to /urls/:shortURL route
 });
+
+// delete route
+app.post('/urls/:shortURL/delete', (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect('/urls');
+})
 
 
 app.listen(PORT, () => {
