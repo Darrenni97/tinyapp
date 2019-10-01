@@ -7,6 +7,9 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+const cookeParser = require('cookie-parser');
+app.use(cookieParser());
+
 
 // randomize urls
 const generateRandomString = () => {
@@ -72,9 +75,14 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/urls/:shortURL', (req, res) => {
   const shortURL =  req.params.shortURL;
   urlDatabase[shortURL] = req.body.newURL;
-  res.redirect(`/urls/${shortURL}`)
+  res.redirect(`/urls/${shortURL}`);
 })
 
+//post cookie to login
+app.post('/login', (req, res) => {
+  const username = req.body.username;
+  res.cookie('username', username); // sets the username inputted to a cookie labelled username
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
