@@ -99,6 +99,7 @@ app.post('/urls/:shortURL', (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 })
 
+//display login form 
 app.get('/login', (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
   res.render("login", templateVars);
