@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const bcrypt = require('bcrypt');
+
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
@@ -196,7 +198,7 @@ app.post('/register', (req, res) => {
     users[RandomID] = {
       id: RandomID,
       email: emailInput,
-      password: passwordInput
+      password: bcrypt.hashSync(passwordInput, 10)
     };
     res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
     res.redirect('/urls');
