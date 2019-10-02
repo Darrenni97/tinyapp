@@ -32,8 +32,8 @@ const emailChecker = (input) => {
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 const users = { 
@@ -70,7 +70,11 @@ app.get("/urls.json", (req, res) => {
 // new url route
 app.get("/urls/new", (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
-  res.render("urls_new", templateVars);
+  if (users[req.cookies['user_id']]) { //checks if there is a user logged in
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 //checks shortURL data
