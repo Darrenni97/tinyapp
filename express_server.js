@@ -116,15 +116,35 @@ app.get("/register", (req, res) => {
   res.render("register", templateVars);
 });
 
+
+const emailChecker = (input) => {
+  for (let user in users) {
+    if (users[user].email === input) {
+      return true;
+    }
+  }
+};
+
 app.post('/register', (req, res) => {
-  const RandomID = generateRandomString();
-  users[RandomID] = {
-    id: RandomID,
-    email: req.body.email,
-    password: req.body.password
-  };
-  res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
-  res.redirect('/urls')
+  const RandomID = generateRandomString(); //generates random ID for user
+  const emailInput = req.body.email;
+  const passwordInput = req.body.password;
+  if (emailInput ===  '' || passwordInput === '') {
+    res.status(400);
+    res.send('400: Error');
+  } else if (emailChecker(emailInput)) {
+    res.status(400);
+    res.send('400: Email Taken');
+  } else {
+    users[RandomID] = {
+      id: RandomID,
+      email: emailInput,
+      password: passwordInput
+    };
+    console.log(users);
+    res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
+    res.redirect('/urls');
+  }
 })
 
 app.listen(PORT, () => {
