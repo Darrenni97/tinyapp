@@ -105,8 +105,8 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 // handles shortURL links to redirect to longURL;
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL]['longURL'] // retrieve long url link from the shortURL route
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id]['longURL'] // retrieve long url link from the shortURL route
   res.redirect(longURL);
 });
 
@@ -121,22 +121,34 @@ app.post("/urls", (req, res) => {
 
 // delete route
 app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls');
-})
+  const cookies = users[req.cookies['user_id']]
+  
+  if (cookies) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls');
+  } else {
+    res.send("Cannot delete, please login!");
+  }
+});
 
 //update/edit longURL
-app.post('/urls/:shortURL', (req, res) => {
-  const shortURL =  req.params.shortURL;
-  urlDatabase[shortURL] = req.body.newURL;
-  res.redirect(`/urls/${shortURL}`);
-})
+app.post('/urls/:id', (req, res) => {
+  const shortURL =  req.params.id;
+  const cookies = users[req.cookies['user_id']]
+
+  if (cookies) {
+    urlDatabase[shortURL] = req.body.newURL;
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    res.send("Cannot edit, please login!");
+  }
+});
 
 //display login form 
 app.get('/login', (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
   res.render("login", templateVars);
-})
+});
 
 //post cookie to login
 app.post('/login', (req, res) => {
@@ -161,7 +173,7 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
   res.redirect('/urls');
-})
+});
 
 app.get("/register", (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
@@ -189,7 +201,7 @@ app.post('/register', (req, res) => {
     res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
     res.redirect('/urls');
   }
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
