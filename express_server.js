@@ -107,13 +107,26 @@ app.get('/login', (req, res) => {
 
 //post cookie to login
 app.post('/login', (req, res) => {
-  const user_id = req.body.username;
-  res.cookie('user_id', user_id); // sets the username inputted to a cookie labelled username
-  res.redirect('/urls');
-})
+  const user_id = req.body.email;
+  const password = req.body.password
+  if (emailChecker(user_id)) {
+    for (let user in users) {
+      if (users[user].password === password) {
+        res.cookie('user_id', user_id)// sets the username inputted to a cookie labelled username
+        res.redirect('/urls');
+      } else {
+      res.status(403);
+      res.send('403: Wrong Password');
+      }
+    }
+  } else {
+    res.status(403);
+    res.send('403: Email Not Found');
+  }
+});
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
 })
 
