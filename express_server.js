@@ -10,6 +10,23 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+};
+
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 // randomize urls
 const generateRandomString = () => {
@@ -31,23 +48,16 @@ const emailChecker = (input) => {
   }
 };
 
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
-};
-
-const users = { 
-  "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
+//function to return URLs for logged in user
+const urlsForUser = (id) => {
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {
+      return urlDatabase[url].longURL;
+    }
   }
-}
+};
+urlsForUser();
+
 
 app.get('/', (req, res) => {
   res.send('Hello!');
@@ -59,7 +69,11 @@ app.get("/urls", (req, res) => {
     urls: urlDatabase,
     user: users[req.cookies['user_id']]
   };
-  res.render("urls_index", templateVars);
+  if (users[req.cookies['user_id']]) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.send("Please login or register to see URL's");
+  }
 });
 
 // database url json format
@@ -81,7 +95,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL]['longURL'],
     user: users[req.cookies['user_id']]
   };
   res.render("urls_show", templateVars);
@@ -89,13 +103,16 @@ app.get("/urls/:shortURL", (req, res) => {
 
 // handles shortURL links to redirect to longURL;
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL] // retrieve long url link from the shortURL route
+  const longURL = urlDatabase[req.params.shortURL]['longURL'] // retrieve long url link from the shortURL route
   res.redirect(longURL);
 });
 
 app.post("/urls", (req, res) => {
   const newID = generateRandomString();
-  urlDatabase[newID] = req.body.longURL; // adds new links to database
+  urlDatabase[newID] = {// adds new links to database
+    longURL: req.body.longURL,
+    user_id: req.cookies['user_id']
+  }
   res.redirect(`/urls/${newID}`);  //responds with a redirect to /urls/:shortURL route
 });
 
