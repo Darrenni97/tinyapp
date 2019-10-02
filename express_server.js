@@ -27,6 +27,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
 app.get('/', (req, res) => {
   res.send('Hello!');
 })
@@ -102,6 +115,17 @@ app.get("/register", (req, res) => {
   let templateVars = {username: req.cookies["username"]};
   res.render("register", templateVars);
 });
+
+app.post('/register', (req, res) => {
+  const RandomID = generateRandomString();
+  users[RandomID] = {
+    id: RandomID,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
+  res.redirect('/urls')
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
