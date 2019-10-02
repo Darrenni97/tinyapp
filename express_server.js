@@ -50,14 +50,15 @@ const emailChecker = (input) => {
 
 //function to return URLs for logged in user
 const urlsForUser = (id) => {
+  urls = {}
+
   for (let url in urlDatabase) {
     if (urlDatabase[url].userID === id) {
-      return urlDatabase[url].longURL;
+      urls[url] = urlDatabase[url].longURL;
     }
   }
+  return urls;
 };
-urlsForUser();
-
 
 app.get('/', (req, res) => {
   res.send('Hello!');
@@ -65,11 +66,13 @@ app.get('/', (req, res) => {
 
 // route handler to pass url data
 app.get("/urls", (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase,
-    user: users[req.cookies['user_id']]
-  };
-  if (users[req.cookies['user_id']]) {
+  const cookies = users[req.cookies['user_id']]
+
+  if (cookies) {
+    let templateVars = { 
+      urls: urlsForUser(cookies.id),
+      user: cookies
+    };
     res.render("urls_index", templateVars);
   } else {
     res.send("Please login or register to see URL's");
@@ -111,7 +114,7 @@ app.post("/urls", (req, res) => {
   const newID = generateRandomString();
   urlDatabase[newID] = {// adds new links to database
     longURL: req.body.longURL,
-    user_id: req.cookies['user_id']
+    userID: req.cookies['user_id']
   }
   res.redirect(`/urls/${newID}`);  //responds with a redirect to /urls/:shortURL route
 });
@@ -183,7 +186,6 @@ app.post('/register', (req, res) => {
       email: emailInput,
       password: passwordInput
     };
-    console.log(users);
     res.cookie('user_id', RandomID); // generate cookie under user_id with the generate ID
     res.redirect('/urls');
   }
