@@ -15,12 +15,21 @@ app.use(cookieParser());
 const generateRandomString = () => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
+  
   for (let i = 0; i < 6; i ++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
 }
+
+// checks emails in users
+const emailChecker = (input) => {
+  for (let user in users) {
+    if (users[user].email === input) {
+      return true;
+    }
+  }
+};
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -136,13 +145,6 @@ app.get("/register", (req, res) => {
 });
 
 
-const emailChecker = (input) => {
-  for (let user in users) {
-    if (users[user].email === input) {
-      return true;
-    }
-  }
-};
 
 app.post('/register', (req, res) => {
   const RandomID = generateRandomString(); //generates random ID for user
