@@ -99,6 +99,11 @@ app.post('/urls/:shortURL', (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 })
 
+app.get('/login', (req, res) => {
+  let templateVars = {user: users[req.cookies['user_id']]};
+  res.render("login", templateVars);
+})
+
 //post cookie to login
 app.post('/login', (req, res) => {
   const user_id = req.body.username;
