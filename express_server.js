@@ -18,23 +18,8 @@ app.use(cookieSession({
 
 const bcrypt = require('bcrypt');
 
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
-};
-
-const users = { 
-  "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
-  }
-}
+//helpers
+const getUserByEmail = require('./helpers.js');
 
 // randomize urls
 const generateRandomString = () => {
@@ -55,6 +40,25 @@ const emailChecker = (input) => {
     }
   }
 };
+
+
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+};
+
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 //function to return URLs for logged in user
 const urlsForUser = (id) => {
@@ -158,13 +162,6 @@ app.get('/login', (req, res) => {
   res.render("login", templateVars);
 });
 
-const getUserByEmail = (inputEmail, database) => {
-  for (let user in database) {
-    if (database[user].email === inputEmail) {
-      return database[user];
-    }
-  }
-};
 
 //post cookie to login
 app.post('/login', (req, res) => {
