@@ -43,12 +43,12 @@ app.get('/', (req, res) => {
 
 // route handler to pass url data
 app.get("/urls", (req, res) => {
-  const userEmail = users[req.session.user_id];
+  const cookies = users[req.session.user_id];
 
   if (cookies) {
     let templateVars = {
       urls: urlsForUser(cookies.id),
-      user: userEmail
+      user: cookies
     };
     res.render("urls_index", templateVars);
   } else {
