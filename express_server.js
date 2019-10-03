@@ -158,19 +158,19 @@ app.get('/login', (req, res) => {
   res.render("login", templateVars);
 });
 
-const getUserByEmail = (input) => {
-  for (let user in users) {
-    if (users[user].email === input) {
-      return users[user]
+const getUserByEmail = (inputEmail, database) => {
+  for (let user in database) {
+    if (database[user].email === inputEmail) {
+      return database[user];
     }
   }
-}
+};
 
 //post cookie to login
 app.post('/login', (req, res) => {
   const inputEmail = req.body.email;
   const inputPassword = req.body.password;
-  const userID = getUserByEmail(inputEmail);
+  const userID = getUserByEmail(inputEmail, users);
 
   if (emailChecker(inputEmail)) {
       if (bcrypt.compareSync(inputPassword, userID.password)) {
