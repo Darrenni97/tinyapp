@@ -152,20 +152,28 @@ app.get('/login', (req, res) => {
   res.render("login", templateVars);
 });
 
+const getUserByEmail = (input) => {
+  for (let user in users) {
+    if (users[user].email === input) {
+      return users[user]
+    }
+  }
+}
+
 //post cookie to login
 app.post('/login', (req, res) => {
-  const user_id = req.body.email;
-  const password = req.body.password
-  if (emailChecker(user_id)) {
-    for (let user in users) {
-      if (users[user].password === password) {
-        res.cookie('user_id', user_id)// sets the username inputted to a cookie labelled username
+  const inputEmail = req.body.email;
+  const inputPassword = req.body.password;
+  const userID = getUserByEmail(inputEmail);
+
+  if (emailChecker(inputEmail)) {
+      if (bcrypt.compareSync(inputPassword, userID.password)) {
+        res.cookie('user_id', userID.id)// sets the username inputted to a cookie labelled username
         res.redirect('/urls');
       } else {
-      res.status(403);
-      res.send('403: Wrong Password');
+        res.status(403);
+        res.send('403: Wrong Password');
       }
-    }
   } else {
     res.status(403);
     res.send('403: Email Not Found');
